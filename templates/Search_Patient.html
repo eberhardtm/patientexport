@@ -1,0 +1,33 @@
+<div class="systems-search-section search-section">
+    <form action="<?=$form_action?>" method="post" class="phpws-form">
+        <div class="row">
+            <legend>Patient Search</legend>
+        <div class="row">
+            <div class="col-sm-3">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="patient_id">Patient ID</label>
+                        <input name="patient_id" id="patient-id" type="text" class="form-control" value="" />
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-sm-3">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input name="last_name" id="last-name" type="text" class="form-control"  value="" />
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-sm-3">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input name="first_name" id="first-name" type="text" class="form-control"  value="" />
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Search" />
+    </form>
+</div>
