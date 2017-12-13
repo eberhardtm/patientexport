@@ -7,9 +7,9 @@ and open the template in the editor.
 
 <div class="text-center"><h3><strong>Patient Demographics</strong></h3></div>
 <?php if(!empty($error)) echo "<div class='alert alert-danger'>$error</div>";?>
-<form action="./patientexport/search/run_search" method="post">
+<form class="print-hide" action="./patientexport/search/run_search" method="post">
     <input name="search_back" type="hidden" value="1"/>
-    <input id="reload-search-button" class="btn btn-primary" type="submit" value="Back" />
+    <input id="reload-search-button" class="btn btn-primary print-hide" type="submit" value="Back" />
 </form>
 <div>
 <h4>Patient Information</h4>

@@ -9,4 +9,7 @@ define('PATIENT_MEDICATIONS', 'medications.txt');
 define('PATIENT_ALLERGIES', 'allergies.txt');
 define('PATIENT_GUARANTORS','guarantors.txt');
 define('PATIENT_INSURANCE_PLANS','insurance-plans.txt');
+define('PATIENT_CURRENT_MEDICATIONS', 'current-medications.txt');
+define('PATIENT_CHP_ATTACHMENTS_MASTER', 'chp-attachments-master.txt');
+define('PATIENT_CHP_ATTACHMENTS_IMAGE', 'chp-attachments-image.txt');
 define('SCAN_FOLDER','files/scanned_images');

@@ -1,13 +1,11 @@
 <?php
 
-function patientexport_install(&$content)
-{
+function patientexport_install(&$content) {
     include_once(PHPWS_SOURCE_DIR . "mod/patientexport/config/defines.php");
-    
+
     $db = \phpws2\Database::getDB();
     $db->begin();
     try {
-        /**
         createPatientTable($db, PATIENT_DEMOGRAPHICS, 'patient_demographics');
         importPatientData($db, PATIENT_DEMOGRAPHICS, 'patient_demographics');
         createPatientTable($db, PATIENT_ENCOUNTERS, 'patient_encounters');
@@ -26,8 +24,14 @@ function patientexport_install(&$content)
         importPatientData($db, PATIENT_GUARANTORS, 'patient_guarantors');
         createPatientTable($db, PATIENT_INSURANCE_PLANS, 'patient_insurance_plans');
         importPatientData($db, PATIENT_INSURANCE_PLANS, 'patient_insurance_plans');
-         * 
-         */
+        createPatientTable($db, PATIENT_CHP_ATTACHMENTS_MASTER, 'patient_chp_attachments_master');
+        importPatientData($db, PATIENT_CHP_ATTACHMENTS_MASTER, 'patient_chp_attachments_master');
+        createPatientTable($db, PATIENT_CHP_ATTACHMENTS_IMAGE, 'patient_chp_attachments_image');
+        importPatientData($db, PATIENT_CHP_ATTACHMENTS_IMAGE, 'patient_chp_attachments_image');
+
+        // Don't think these are needed 
+        // createPatientTable($db, PATIENT_CURRENT_MEDICATIONS, 'patient_current_medications');
+        //importPatientData($db, PATIENT_CURRENT_MEDICATIONS, 'patient_current_medications');
     } catch (\Exception $e) {
         \phpws2\Error::log($e);
         $db->rollback();
@@ -38,24 +42,23 @@ function patientexport_install(&$content)
     return true;
 }
 
-function createPatientTable($db, $filename, $db_name)
-{
+function createPatientTable($db, $filename, $db_name) {
     $columns = array();
     $tagToEntry = $db->buildTable($db_name);
     $filehandle = fopen(PHPWS_SOURCE_DIR . "mod/patientexport/boost/import-files/$filename", 'r');
     $fileline = fgets($filehandle);
     $lines = explode('|', $fileline);
     $count = 0;
-    foreach($lines as $line){
+    foreach ($lines as $line) {
         $line = rtrim($line);
         $count++;
-        if(!empty($line)){
-            if($line === 'GENERAL_NOTES_TEXT'){
+        if (!empty($line)) {
+            if ($line === 'GENERAL_NOTES_TEXT') {
                 $tagToEntry->addDataType($line, 'text');
-            }else{
-                if($db_name === 'patient_medications' || $db_name === 'patient_vitals' || $db_name === 'patient_insurance_plans'){
+            } else {
+                if ($db_name === 'patient_medications' || $db_name === 'patient_vitals' || $db_name === 'patient_insurance_plans') {
                     $tagToEntry->addDataType($line, 'text');
-                }else{
+                } else {
                     $tagToEntry->addDataType($line, 'varchar')->setSize('255');
                 }
             }
@@ -65,36 +68,37 @@ function createPatientTable($db, $filename, $db_name)
     fclose($filehandle);
 }
 
-function importPatientData($db, $filename, $db_name)
-{
+function importPatientData($db, $filename, $db_name) {
     $file_contents = file(PHPWS_SOURCE_DIR . "mod/patientexport/boost/import-files/$filename");
     $mysqli_connection = $db->getPDO();
     $columns = explode("|", $file_contents[0]);
     $insert_columns = NULL;
-    foreach($columns as $column){
+    foreach ($columns as $column) {
         $column = trim($column);
-        if($column === "SHOW" || $column === "STATUS"){
+        if ($column === "SHOW" || $column === "STATUS") {
             $column .= "_MED";
         }
-        if(empty($insert_columns)){
+        if (empty($insert_columns)) {
             $insert_columns = $column;
-        }else{
-            $insert_columns .= ",".$column;
+        } else {
+            $insert_columns .= "," . $column;
         }
     }
     unset($file_contents[0]);
-    foreach($file_contents as $row){
+    foreach ($file_contents as $row) {
         $line = explode("|", $row);
-        $data = NULL;
-        foreach($line as $item){
-            $item = $mysqli_connection->quote(trim($item));
-            if(empty($data)){
-                $data = $item;   
-            }else{
-                $data .= ",$item";             
+        if (sizeof($line) > 1) {
+            $data = NULL;
+            foreach ($line as $item) {
+                $item = $mysqli_connection->quote(trim($item));
+                if (empty($data)) {
+                    $data = $item;
+                } else {
+                    $data .= ",$item";
+                }
             }
+            $query = "INSERT INTO $db_name ($insert_columns) VALUES($data)";
+            $db->query($query);
         }
-        $query = "INSERT INTO $db_name ($insert_columns) VALUES($data)";
-        $db->query($query);
     }
 }

@@ -278,11 +278,13 @@ EOF;
             $vitals = Patient::getVitals($encounter_id);
             $problems = Patient::getProblems($encounter_id);
             $medications = Patient::getMedications($encounter_id);
+            $allergies = Patient::getAllergies($encounter_id);
             $encounter_vars['complaint'] = $encounter['CHIEF_COMPLAINT'];
             $encounter_vars['general_notes'] = Patient::formatGeneralNotes($general_notes['GENERAL_NOTES_TEXT']);
             $encounter_vars['vitals'] = Patient::getVitalsView($vitals);
             $encounter_vars['problems'] = Patient::getProblemsView($problems);
             $encounter_vars['medications'] = Patient::getMedicationsView($medications);
+            $encounter_vars['allergies'] = Patient::getAllergiesView($allergies);
             $template = new \phpws2\Template($encounter_vars);
             $template->setModuleTemplate('patientexport', 'Encounter.html');
             $encounter_content .= $template->get();
@@ -430,8 +432,41 @@ EOF;
         return $result;
     }
 
+    public static function getAllergiesView($allergies){
+        $allergies_content = '';
+        $vars = array();
+        foreach ($allergies as $allergy) {
+            if(empty($allergy['DATE_OCCURRENCE'])){
+                $vars['identified_date'] = 'Unknown';
+            }else{
+                $vars['identified_date'] = preg_replace("([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9])", "", $allergy['DATE_OCCURRENCE']);
+            }
+            $vars['description'] = $allergy['DESCRIPTION'];
+            $vars['allergic_reactions'] = "Other";
+            $vars['adverse_reactions'] = "Other";
+            if (empty($allergy['DESCRIPTION'])) {
+                $allergies_content = '';
+            } else {
+                $template = new \phpws2\Template($vars);
+                $template->setModuleTemplate('patientexport', 'Allergies.html');
+                $allergies_content .= $template->get();
+            }
+        }
+        if(!empty($allergies_content)){
+            $template = new \phpws2\Template();
+            $template->setModuleTemplate('patientexport', 'Allergies_Header.html');
+            $allergies_header = $template->get();
+            $allergies_content = $allergies_header.$allergies_content.'<hr style="border-top: 1px solid #0e0e0e !important;"/>';
+        }
+        return $allergies_content;
+    }
+    
     public static function getAllergies($encounter_id) {
-        
+        $db = \phpws2\Database::getDB();
+        $query = "SELECT * FROM patient_allergies WHERE CHP_ENCOUNTER_ID='$encounter_id'";
+        $pdo = $db->query($query);
+        $result = $pdo->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     public static function getScannedImages($patient_id) {
