@@ -276,9 +276,11 @@ EOF;
             $encounter_id = $encounter['CHP_ENCOUNTER_ID'];
             $general_notes = Patient::getGeneralNotes($encounter_id);
             $vitals = Patient::getVitals($encounter_id);
+            $problems = Patient::getProblems($encounter_id);
             $encounter_vars['complaint'] = $encounter['CHIEF_COMPLAINT'];
             $encounter_vars['general_notes'] = Patient::formatGeneralNotes($general_notes['GENERAL_NOTES_TEXT']);
             $encounter_vars['vitals'] = Patient::getVitalsView($vitals);
+            $encounter_vars['problems'] = Patient::getProblemsView($problems);
             $template = new \phpws2\Template($encounter_vars);
             $template->setModuleTemplate('patientexport', 'Encounter.html');
             $encounter_content .= $template->get();
@@ -314,10 +316,10 @@ EOF;
     public static function getVitalsView($vitals) {
         $systolic = $vitals['BP_SYSTOLIC'];
         $diastolic = $vitals['BP_DIASTOLIC'];
-        if(!empty($systolic) && !empty($diastolic)){
-            $vars['bp'] =  $systolic. "/" .$diastolic;
-        }else {
-            $vars['bp'] = '';    
+        if (!empty($systolic) && !empty($diastolic)) {
+            $vars['bp'] = $systolic . "/" . $diastolic;
+        } else {
+            $vars['bp'] = '';
         }
         $vars['pulse'] = $vitals['HR_PULSE'];
         $vars['temp'] = $vitals['TEMP_TEMPERATURE'];
@@ -331,9 +333,9 @@ EOF;
         $vars['pain'] = $vitals['PA_LEVEL'];
         $vars['o2'] = $vitals['O2_SAT'];
         $vars['fio2'] = "";
-        if(empty($vars['bp']) && empty($vars['pulse']) && empty($vars['weight'])){
+        if (empty($vars['bp']) && empty($vars['pulse']) && empty($vars['weight'])) {
             $vitals_content = '';
-        }else{
+        } else {
             $template = new \phpws2\Template($vars);
             $template->setModuleTemplate('patientexport', 'Vitals.html');
             $vitals_content = $template->get();
@@ -349,8 +351,35 @@ EOF;
         return $result;
     }
 
+    public static function getProblemsView($problems) {
+        $problem_content = '';
+        $vars = array();
+        foreach ($problems as $problem) {
+            $vars['description'] = $problem['DESCRIPTION'];
+            $vars['identified_date'] = preg_replace("([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9])", "", $problem['DATE_RECORDED']);
+            $vars['modified_date'] = preg_replace("([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9])", "", $problem['DT_IDENTIFIED_MOD_DATE']);
+            $vars['condition'] = $problem['PROBLEM_STATUS'];
+            $vars['resolved_date'] = preg_replace("([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9])", "", $problem['RESOLVED_DATE_VALUE']);
+            if (empty($problem['DESCRIPTION'])) {
+                $problem_content = '';
+            } else {
+                $template = new \phpws2\Template($vars);
+                $template->setModuleTemplate('patientexport', 'Problems.html');
+                $problem_content .= $template->get();
+            }
+        }
+        if(!empty($problem_content)){
+            $problem_content .= '<hr style="border-top: 1px solid #0e0e0e !important;"/>';
+        }
+        return $problem_content;
+    }
+
     public static function getProblems($encounter_id) {
-        
+        $db = \phpws2\Database::getDB();
+        $query = "SELECT * FROM patient_problems WHERE CHP_ENCOUNTER_ID='$encounter_id'";
+        $pdo = $db->query($query);
+        $result = $pdo->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     public static function getMedications($encounter_id) {
