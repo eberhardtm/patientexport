@@ -312,8 +312,13 @@ EOF;
     }
 
     public static function getVitalsView($vitals) {
-        
-        $vars['bp'] = $vitals['BP_SYSTOLIC'] . "/" . $vitals['BP_DIASTOLIC'];
+        $systolic = $vitals['BP_SYSTOLIC'];
+        $diastolic = $vitals['BP_DIASTOLIC'];
+        if(!empty($systolic) && !empty($diastolic)){
+            $vars['bp'] =  $systolic. "/" .$diastolic;
+        }else {
+            $vars['bp'] = '';    
+        }
         $vars['pulse'] = $vitals['HR_PULSE'];
         $vars['temp'] = $vitals['TEMP_TEMPERATURE'];
         $vars['weight'] = $vitals['WT_WEIGHT'];
