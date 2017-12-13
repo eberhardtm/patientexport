@@ -7,6 +7,7 @@
  */
 
  $db = \phpws2\Database::getDB();
+ /**
  $db->buildTable('patient_demographics')->drop(true);
  $db->buildTable('patient_encounters')->drop(true);
  $db->buildTable('patient_general_notes')->drop(true);
@@ -14,4 +15,6 @@
  $db->buildTable('patient_problems')->drop(true);
  $db->buildTable('patient_medications')->drop(true);
  $db->buildTable('patient_allergies')->drop(true);
+  * 
+  */
  return true;

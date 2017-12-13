@@ -1,12 +1,12 @@
 <?php
 
-namespace systemsinventory\Controller;
+namespace patientexport\Controller;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class ViewSystem extends \Http\Controller
+class ViewSystem extends \Canopy\Http\Controller
 {
 
     public function get(\Request $request)
@@ -19,7 +19,7 @@ class ViewSystem extends \Http\Controller
 
     protected function getHtmlView($data, \Request $request)
     {
-        $content = \systemsinventory\Factory\ContactInfo::form($request, 'view_system');
+        $content = \patientexport\Factory\ContactInfo::form($request, 'view_system');
         $view = new \View\HtmlView(\PHPWS_ControlPanel::display($content));
         return $view;
     }

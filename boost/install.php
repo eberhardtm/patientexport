@@ -7,6 +7,7 @@ function patientexport_install(&$content)
     $db = \phpws2\Database::getDB();
     $db->begin();
     try {
+        /**
         createPatientTable($db, PATIENT_DEMOGRAPHICS, 'patient_demographics');
         importPatientData($db, PATIENT_DEMOGRAPHICS, 'patient_demographics');
         createPatientTable($db, PATIENT_ENCOUNTERS, 'patient_encounters');
@@ -21,6 +22,12 @@ function patientexport_install(&$content)
         importPatientData($db, PATIENT_ALLERGIES, 'patient_allergies');
         createPatientTable($db, PATIENT_VITALS, 'patient_vitals');
         importPatientData($db, PATIENT_VITALS, 'patient_vitals');
+        createPatientTable($db, PATIENT_GUARANTORS, 'patient_guarantors');
+        importPatientData($db, PATIENT_GUARANTORS, 'patient_guarantors');
+        createPatientTable($db, PATIENT_INSURANCE_PLANS, 'patient_insurance_plans');
+        importPatientData($db, PATIENT_INSURANCE_PLANS, 'patient_insurance_plans');
+         * 
+         */
     } catch (\Exception $e) {
         \phpws2\Error::log($e);
         $db->rollback();
@@ -46,7 +53,7 @@ function createPatientTable($db, $filename, $db_name)
             if($line === 'GENERAL_NOTES_TEXT'){
                 $tagToEntry->addDataType($line, 'text');
             }else{
-                if($db_name === 'patient_medications' || $db_name === 'patient_vitals'){
+                if($db_name === 'patient_medications' || $db_name === 'patient_vitals' || $db_name === 'patient_insurance_plans'){
                     $tagToEntry->addDataType($line, 'text');
                 }else{
                     $tagToEntry->addDataType($line, 'varchar')->setSize('255');

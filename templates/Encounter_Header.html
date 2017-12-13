@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="text-center">
+    <h3><strong>Encounter Summary</strong></h3>
+    <h4>Alan Keys Surgical, PA</h4>
+    <h4>233 Jefferson Street</h4>
+    <h4>North Wilkesboro, NC 28659-3537</h4>
+    <h4>Phone: (336)667-9300</h4>
+</div>
+<div>
+    <div class="row">
+            <div class="col-sm-3 text-right">
+                <label for="name">Patient Name:</label>
+            </div>
+            <div class="col-sm-3">
+                <span id="name"><?=$name?></span>
+            </div>
+            <div class="col-sm-4 text-right">
+                <label for="acct_number">Account Number:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="acct-number"><?=$acct_number?></p>
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-sm-3 text-right">
+                <label for="dob">Patient DOB(Age):</label>
+            </div>
+            <div class="col-sm-3">
+                <span id="dob"><?=$dob?>(<?=$age?>)</span>
+            </div>
+            <div class="col-sm-4 text-right">
+                <label for="examiner">Examiner:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="examiner"><?=$examiner?></p>
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-sm-3 text-right">
+                <label for="phone">Patient Phone:</label>
+            </div>
+            <div class="col-sm-3">
+                <span id="phone"><?=$phone?></span>
+            </div>
+            <div class="col-sm-4 text-right">
+                <label for="encounter_date">Encounter Date:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="encounter-date"><?=$encounter_date?></p>
+            </div>
+        </div>
+</div>
+<hr style="border-top: 3px solid #0e0e0e !important;"/>

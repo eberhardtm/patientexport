@@ -69,11 +69,7 @@ class Settings extends \Http\Controller {
             default:
                 throw new Exception("Invalid command received in system settings. Command = $command");
         }
-//        $device_id = $sdfactory->postDevice($request);
-//        
-//        $this->postSpecificDevice($request, $device_type, $device_id);
-//        
-//        $data['action'] = 'success';
+
         if($isJson){
             $view = new \View\JsonView(array('success' => TRUE));
         }else{

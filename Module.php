@@ -20,7 +20,7 @@ class Module extends \Canopy\Module implements \Canopy\SettingDefaults {
         if (\Current_User::allow('sysinventory')) {
 
             switch ($cmd) {
-                case 'system':
+                case 'patient':
                         $system = new \patientexport\Controller\Patient($this);
                         return $system;                    
                 case 'settings':
@@ -42,7 +42,7 @@ class Module extends \Canopy\Module implements \Canopy\SettingDefaults {
             \patientexport\Controller\Patient::loadAdminBar();
 
         if (\PHPWS_Core::atHome() && \Current_User::isLogged()) {
-            $path = $_SERVER['SCRIPT_NAME'] . '?module=systemsinventory';
+            $path = $_SERVER['SCRIPT_NAME'] . '?module=patientexport';
             header('HTTP/1.1 303 See Other');
             header("Location: $path");
             exit();

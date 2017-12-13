@@ -33,13 +33,14 @@ class Search extends \phpws2\Http\Controller {
             $db->addConditional($conditional);
         $result = $db->select();
         $dbpager = new \phpws2\DatabasePager($db);
-        $dbpager->setHeaders(array('PR_ACCT_ID' => 'Patient ID', 'LASTNAME' => 'Last Name', 'FIRSTNAME' => 'First Name'));
+        $dbpager->setHeaders(array('PR_ACCT_ID' => 'Patient ID', 'LASTNAME' => 'Last Name', 'FIRSTNAME' => 'First Name','BIRTHDATE' => 'DOB'));
         $tbl_headers['PR_ACCT_ID'] = $sd->getField('PR_ACCT_ID');
         $tbl_headers['LASTNAME'] = $sd->getField('LASTNAME');
         $tbl_headers['FIRSTNAME'] = $sd->getField('FIRSTNAME');
+        $tbl_headers['BIRTHDATE'] = $sd->getField('BIRTHDATE');
         $dbpager->setTableHeaders($tbl_headers);
         $dbpager->setId('patient-list');
-        //$dbpager->setRowIdColumn('PR_ACCT_ID');
+        $dbpager->setRowIdColumn('PR_ACCT_ID');
        // $dbpager->setCallback(array('\patientexport\Controller\Search', 'alterSearchRow'));
         $data = $dbpager->getJson();
         return parent::getJsonView($data, $request);
@@ -47,10 +48,10 @@ class Search extends \phpws2\Http\Controller {
 
     private function createSearchConditional($db) {
         $conditional = NULL;
-        if (empty($_SESSION['system_search_vars'])) {
+        if (empty($_SESSION['patient_search_vars'])) {
             $conditional = NULL;
         } else {
-            $search_vars = $_SESSION['system_search_vars'];
+            $search_vars = $_SESSION['patient_search_vars'];
             if (!empty($search_vars['patient_id'])) {
                 $tmp_cond = new \phpws2\Database\Conditional($db, 'PR_ACCT_ID', $search_vars['patient_id'], '=');
                 $conditional = $this->addSearchConditional($db, $conditional, $tmp_cond, 'AND');                                
@@ -71,7 +72,7 @@ class Search extends \phpws2\Http\Controller {
         if (empty($conditional)){
             $conditional = $tmp_cond;
         }else{
-            $conditional = new \Database\Conditional($db, $conditional, $tmp_cond, $operator);    
+            $conditional = new \phpws2\Database\Conditional($db, $conditional, $tmp_cond, $operator);    
         }
         return $conditional;
     }
@@ -103,7 +104,9 @@ class Search extends \phpws2\Http\Controller {
 
         $factory = new Factory;
         $search_vars = $request->getVars();
-        $_SESSION['system_search_vars'] = $search_vars['vars'];
+        if(empty($_SESSION['patient_search_vars']) || !isset($search_vars['vars']['search_back'])){
+            $_SESSION['patient_search_vars'] = $search_vars['vars'];
+        }
         \phpws2\Pager::prepare();
         $template = new \phpws2\Template;
         $template->setModuleTemplate('patientexport', 'search_results.html');

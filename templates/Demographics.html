@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<div class="text-center"><h3><strong>Patient Demographics</strong></h3></div>
+<?php if(!empty($error)) echo "<div class='alert alert-danger'>$error</div>";?>
+<form action="./patientexport/search/run_search" method="post">
+    <input name="search_back" type="hidden" value="1"/>
+    <input id="reload-search-button" class="btn btn-primary" type="submit" value="Back" />
+</form>
+<div>
+<h4>Patient Information</h4>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="name">Name:</label>
+            </div>
+            <div class="col-sm-3">
+                <span id="name"><?=$name?></span>
+            </div>
+            <div class="col-sm-5 text-right">
+                <label for="acct_number">Account Number:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="acct-number"><?=$acct_number?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="address">Address:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="address1" style='margin-bottom: 0px !important;'><?=$address1?></p>
+                <p id="address2" style='margin-top:0px !important; margin-bottom: 0px !important;'><?=$address2?></p>
+                <p id="city-state" style='margin-top:0px !important; margin-bottom: 0px !important;'><?=$city_state?></p>
+            </div>
+            <div class="col-sm-5 text-right">
+                <label for="chart_number">Chart #:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="chart-number"><?=$chart_number?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="home_phone">Home Phone:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="home-phone"><?=$home_phone?></p>
+            </div>
+            <div class="col-sm-5 text-right">
+                <label for="dob">DOB:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="dob"><?=$dob?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="cell_phone">Cell Phone:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="cell-phone"><?=$cell_phone?></p>
+            </div>
+            <div class="col-sm-5 text-right">
+                <label for="age">Age:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="age"><?=$age?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="work_phone">Work Phone:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="work-phone"><?=$work_phone?></p>
+            </div>
+            <div class="col-sm-5 text-right">
+                <label for="ssn">SSN:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="ssn"><?=$ssn?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="doctor">Doctor:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="doctor"><?=$doctor?></p>
+            </div>
+            <div class="col-sm-5 text-right">
+                <label for="gender">Gender:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="gender"><?=$gender?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="referral">Referral:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="referral"><?=$referral?></p>
+            </div>
+            <div class="col-sm-5 text-right">
+                <label for="email">Email:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="email"><?=$email?></p>
+            </div>
+        </div>
+<hr style="border-top: 2px solid #0e0e0e !important;"/>
+</div>
+<div>
+    <h4>Guarantor Information</h4>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="name">Name:</label>
+            </div>
+            <div class="col-sm-3">
+                <span id="name"><?=$guarantor_name?></span>
+            </div>
+            <div class="col-sm-2 text-right">
+                <label for="acct_number">Guarantor #:</label>
+            </div>
+            <div class="col-sm-1">
+                <p id="acct-number"><?=$guarantor_acct_number?></p>
+            </div>
+            <div class="col-sm-2 text-right">
+                <label for="relationship">Relationship:</label>
+            </div>
+            <div class="col-sm-2">
+                <span id="name"><?=$guarantor_relationship?></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="address">Address:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="address1" style='margin-bottom: 0px !important;'><?=$guarantor_address1?></p>
+                <p id="address2" style='margin-top:0px !important; margin-bottom: 0px !important;'><?=$guarantor_address2?></p>
+                <p id="city-state" style='margin-top:0px !important; margin-bottom: 0px !important;'><?=$guarantor_city_state?></p>
+            </div>
+            <div class="col-sm-2 text-right">
+                <label for="dob">DOB:</label>
+            </div>
+            <div class="col-sm-1">
+                <p id="dob"><?=$guarantor_dob?></p>
+            </div>
+            <div class="col-sm-2 text-right">
+                <label for="ssn">SSN:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="ssn"><?=$guarantor_ssn?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="home_phone">Home Phone:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="home-phone"><?=$guarantor_home_phone?></p>
+            </div>
+            <div class="col-sm-2 text-right">
+                <label for="gender">Gender:</label>
+            </div>
+            <div class="col-sm-2">
+                <p id="gender"><?=$guarantor_gender?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="cell_phone">Cell Phone:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="cell-phone"><?=$guarantor_cell_phone?></p>
+            </div>
+            <div class="col-sm-2 text-right">
+                <label for="email">Email:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="email"><?=$guarantor_email?></p>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-right">
+                <label for="other_phone">Other Phone:</label>
+            </div>
+            <div class="col-sm-3">
+                <p id="work-phone"><?=$guarantor_other_phone?></p>
+            </div>
+        </div>     
+</div>
+<hr style="border-top: 2px solid #0e0e0e !important;"/>
+<div>
+    <h4>Emergency Contacts</h4>
+    <?php if(!empty($contact_empty)) echo "<div class='alert alert-info'>$contact_empty</div>"; ?>
+<div><?=$contacts?></div>
+</div>
+<hr style="border-top: 2px solid #0e0e0e !important;"/>
+<div>
+    <h4>Insurance Information</h4>
+    <?php if(!empty($insurance_empty))echo "<div class='alert alert-info'>$insurance_empty</div>"; ?>
+    <div><?=$insurance?></div>
+</div>
+<p style="page-break-before: always"></p>
+<div><?=$encounters?></div>
+<div><?=$images?></div>
+    

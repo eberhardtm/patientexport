@@ -14,7 +14,7 @@ class Search extends \phpws2\ResourceFactory
     {
         javascript('jquery');
         \phpws2\Form::requiredScript();     
-    
+
 	if(empty($command))
 	  $command = 'run_search';
 	$vars['form_action'] = "./patientexport/search/".$command;
