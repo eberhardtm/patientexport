@@ -277,10 +277,12 @@ EOF;
             $general_notes = Patient::getGeneralNotes($encounter_id);
             $vitals = Patient::getVitals($encounter_id);
             $problems = Patient::getProblems($encounter_id);
+            $medications = Patient::getMedications($encounter_id);
             $encounter_vars['complaint'] = $encounter['CHIEF_COMPLAINT'];
             $encounter_vars['general_notes'] = Patient::formatGeneralNotes($general_notes['GENERAL_NOTES_TEXT']);
             $encounter_vars['vitals'] = Patient::getVitalsView($vitals);
             $encounter_vars['problems'] = Patient::getProblemsView($problems);
+            $encounter_vars['medications'] = Patient::getMedicationsView($medications);
             $template = new \phpws2\Template($encounter_vars);
             $template->setModuleTemplate('patientexport', 'Encounter.html');
             $encounter_content .= $template->get();
@@ -369,7 +371,10 @@ EOF;
             }
         }
         if(!empty($problem_content)){
-            $problem_content .= '<hr style="border-top: 1px solid #0e0e0e !important;"/>';
+            $template = new \phpws2\Template();
+            $template->setModuleTemplate('patientexport', 'Problems_Header.html');
+            $problems_header = $template->get();
+            $problem_content = $problems_header.$problem_content.'<hr style="border-top: 1px solid #0e0e0e !important;"/>';
         }
         return $problem_content;
     }
@@ -382,8 +387,47 @@ EOF;
         return $result;
     }
 
+    public static function getMedicationsView($medications){
+        $medications_content = '';
+        $vars = array();
+        foreach ($medications as $medication) {
+            if($medication['ONSET_UNKNOWN'] == '1'){
+                $vars['prescribed'] = 'Unknown';
+            }else{
+                $vars['prescribed'] = preg_replace("([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9])", "", $medication['DATE_ORDERED']);
+            }
+            $vars['medication'] = $medication['MEDICATION'];
+            $vars['dispense'] = $medication['DISPENSE'];
+            $vars['sig'] = $medication['SIG'];
+            if(empty($medication['NO_OF_REFILLS'])){
+                $vars['refills'] = '0';
+            }else{
+                $vars['refills'] = $medication['NO_OF_REFILLS'];
+            }
+            $vars['disc'] = $medication['DISC_RSN'];
+            if (empty($medication['MEDICATION'])) {
+                $medications_content = '';
+            } else {
+                $template = new \phpws2\Template($vars);
+                $template->setModuleTemplate('patientexport', 'Medications.html');
+                $medications_content .= $template->get();
+            }
+        }
+        if(!empty($medications_content)){
+            $template = new \phpws2\Template();
+            $template->setModuleTemplate('patientexport', 'Medication_Header.html');
+            $medications_header = $template->get();
+            $medications_content = $medications_header.$medications_content.'<hr style="border-top: 1px solid #0e0e0e !important;"/>';
+        }
+        return $medications_content;
+    }
+    
     public static function getMedications($encounter_id) {
-        
+        $db = \phpws2\Database::getDB();
+        $query = "SELECT * FROM patient_medications WHERE CHP_ENCOUNTER_ID='$encounter_id'";
+        $pdo = $db->query($query);
+        $result = $pdo->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     public static function getAllergies($encounter_id) {
