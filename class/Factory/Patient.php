@@ -149,7 +149,7 @@ EOF;
         }
         $vars = Patient::getInsuranceView($vars, $patient_demographics);
         $vars['encounters'] = Patient::getEncounterView($patient);
-        $vars['images'] = " ";
+        $vars['images'] = Patient::getScannedImages($patient_id);
 
         $template = new \phpws2\Template($vars);
         $template->setModuleTemplate('patientexport', $template_name);
@@ -470,7 +470,24 @@ EOF;
     }
 
     public static function getScannedImages($patient_id) {
-        include_once(PHPWS_SOURCE_DIR . "mod/systemsinventory/config/defines.php");
+        include_once(PHPWS_SOURCE_DIR . "mod/patientexport/config/defines.php");
+        $image_content = '';
+        $db = \phpws2\Database::getDB();
+        $query = "SELECT * FROM patient_chp_attachments_master WHERE PATIENT_RSN='$patient_id' AND ATTACH_TYPE != ''";
+        $pdo = $db->query($query);
+        $master_result = $pdo->fetchAll(\PDO::FETCH_ASSOC);
+        foreach($master_result as $master){
+            $chp_attachment_id = $master['CHP_ATTACHMENTS_ID'];
+            $query = "SELECT * FROM patient_chp_attachments_image WHERE CHP_ATTACHMENTS_ID='$chp_attachment_id' ORDER BY DISPLAY_ORDER ASC";
+            $pdo = $db->query($query);
+            $image_result = $pdo->fetchAll(\PDO::FETCH_ASSOC);
+            foreach($image_result as $image){
+                $id = $image['CHP_ATTACHMENTS_IMAGE_ID'];
+                $src = PHPWS_SOURCE_HTTP . SCAN_FOLDER . IMAGE_NAME . $id . ".blob.jpg";
+                $image_content .= "<div><img class='img-fluid' src='$src'></img></div>";
+            }
+        }
+        return $image_content;
     }
 
     public static function searchPhysicalID($physical_id) {

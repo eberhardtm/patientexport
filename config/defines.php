@@ -12,4 +12,5 @@ define('PATIENT_INSURANCE_PLANS','insurance-plans.txt');
 define('PATIENT_CURRENT_MEDICATIONS', 'current-medications.txt');
 define('PATIENT_CHP_ATTACHMENTS_MASTER', 'chp-attachments-master.txt');
 define('PATIENT_CHP_ATTACHMENTS_IMAGE', 'chp-attachments-image.txt');
-define('SCAN_FOLDER','files/scanned_images');
+define('SCAN_FOLDER','files/scanned_images/');
+define('IMAGE_NAME', 'chp_attachments_image.image._chp_attachments_image_id=');
