@@ -1,2 +1,1 @@
-# systemsinventory
-A web based system for managing computer and electronic device inventory as well as tracking historical inventory changes.
+Custom mod to export a patient chart from a proprietary system data dump.
